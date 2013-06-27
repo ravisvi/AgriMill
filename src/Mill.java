@@ -1,3 +1,6 @@
+import java.sql.SQLException;
+import java.sql.Statement;
+
 
 public class Mill{
     //Contains 5 pulses for rice, wheat corn millet and rawa
@@ -10,21 +13,23 @@ public class Mill{
         }
     }
 
-    public void generate()
+    public void generate(int millNumber,Connect connector)
     {
         //put db insertion here.
         int numberOfWorkingHours=AmConstants.millWorkingHours;
         int pulseCount;
-
+        int tempConsumption[]=new int[AmConstants.numberOfPulses];
         while(numberOfWorkingHours>0){
             pulseCount=AmUtils.random.nextInt(AmConstants.numberOfPulses);
             //Get a random pulse.
-
+            
             this.pulses[pulseCount].addConsumptionBy(AmUtils.random.nextInt(32));
             //Add a random consumption quantity to that pulse.
 
+            tempConsumption[pulseCount]+=this.pulses[pulseCount].getConsumptionQty();
             if(pulseCount==0){
                 numberOfWorkingHours-=(int)((this.pulses[pulseCount].getConsumptionQty())/6);  //rice= 6/hour
+                
             }
 
             else if(pulseCount==1){
@@ -44,5 +49,15 @@ public class Mill{
             }
 
         }
+        try {
+			Statement statement=connector.conn.createStatement();
+			String insertion="INSERT INTO mill"+millNumber+" values("+tempConsumption[0]+","+tempConsumption[1]+","+tempConsumption[2]+","+tempConsumption[3]+","+tempConsumption[4]+");";
+			statement.executeUpdate(insertion);
+			statement.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
     }
 }

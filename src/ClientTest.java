@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 public class ClientTest {
@@ -14,10 +15,15 @@ public class ClientTest {
         numberOfMills=in.nextInt();
         System.out.print("Enter the number of days\t");
         numberOfDays=in.nextInt();
+        
+        Connect connector =new Connect();
+        connector.connect();
+        
         ArrayList<MillThreadHandler> millThreadList=new ArrayList<MillThreadHandler>();
 
-        for(millCount=0; millCount<numberOfMills; millCount++){
-            millThreadList.add(new MillThreadHandler(numberOfDays));
+        for(millCount=0; millCount<numberOfMills; millCount++)
+        {
+            millThreadList.add(new MillThreadHandler(numberOfDays,millCount+1,connector));
             new Thread(millThreadList.get(millCount)).start();
         }
         try {
@@ -42,5 +48,11 @@ public class ClientTest {
             System.out.println(millThreadList.get(millCount).mill.pulses[pulseCount++].getConsumptionQty()+" kgs");
 
         }
+        try {
+			connector.conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }

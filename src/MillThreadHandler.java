@@ -1,30 +1,48 @@
+import java.sql.SQLException;
+import java.sql.Statement;
+
 
 public class MillThreadHandler implements Runnable {
     private int numberOfDays;
     public Mill mill=new Mill();
-
-    public MillThreadHandler(int numberOfDays){
+    private int millNumber;
+    private Connect connector;
+    
+    public MillThreadHandler(int numberOfDays,int millNumber,Connect connector){
         this.numberOfDays=numberOfDays;
+        this.millNumber=millNumber;
+        this.connector=connector;
     }
 
     @Override
     public void run(){
+    	Statement stmt;
+		try {
+			stmt = connector.conn.createStatement();
+			String tablename="CREATE TABLE mill"+ millNumber +" (Rice integer,Wheat int , Rawa int, Millet int, Corn int)";
+			stmt.executeUpdate(tablename);
+			stmt.close();
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
        int dayCount;
        // long daysInMs;
-    	long final_time;
+       /*long final_time;
        System.out.println(System.currentTimeMillis());
        // daysInMs=(this.numberOfDays*(AmConstants.daysToMillisecs))+System.currentTimeMillis();
        final_time=this.numberOfDays*1000+System.currentTimeMillis();
 
         while(System.currentTimeMillis()<=final_time){
-            mill.generate();
+            mill.generate(millNumber,connector);
         }
         System.out.println(System.currentTimeMillis());
-        
+        */
         //for normal execution, will need this to test out for database first as it will take less time.
-        /*for(dayCount=0; dayCount<numberOfDays; dayCount++){
-        mill.generate();
-        }*/
+        for(dayCount=0; dayCount<numberOfDays; dayCount++){
+        	  mill.generate(millNumber,connector);
+        }
         
     }
 
