@@ -23,10 +23,20 @@ public class Mill{
             pulseCount=AmUtils.random.nextInt(AmConstants.numberOfPulses);
             //Get a random pulse.
             
-            this.pulses[pulseCount].addConsumptionBy(AmUtils.random.nextInt(32));
+            //Adding minimum consumption first.
+           
+            for(int randomQty=0;randomQty<5;randomQty++){
+            	int getQuantity=AmUtils.random.nextInt(10)+1;
+            	tempConsumption[randomQty]=getQuantity;
+            	numberOfWorkingHours-=(int)((getQuantity/AmConstants.pulseProductionTime[randomQty]));
+            	
+            }
+            int randomQuantity = AmUtils.random.nextInt(32);
+            this.pulses[pulseCount].addConsumptionBy(randomQuantity);
+            
             //Add a random consumption quantity to that pulse.
 
-            tempConsumption[pulseCount]+=this.pulses[pulseCount].getConsumptionQty();
+            tempConsumption[pulseCount]+=randomQuantity;
             if(pulseCount==0){
                 numberOfWorkingHours-=(int)((this.pulses[pulseCount].getConsumptionQty())/6);  //rice= 6/hour
                 

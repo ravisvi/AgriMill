@@ -40,7 +40,7 @@ public class MillThreadHandler implements Runnable {
         System.out.println(System.currentTimeMillis());
         */
         //for normal execution, will need this to test out for database first as it will take less time.
-        for(dayCount=0; dayCount<numberOfDays; dayCount++){
+        for(dayCount=0; ; ){
         	  mill.generate(millNumber,connector);
         }
         
