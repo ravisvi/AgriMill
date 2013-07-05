@@ -29,7 +29,9 @@ public class ClientTest {
         	millThreadList.add(new MillThreadHandler(numberOfDays,millCount+1,connector));
         	Thread tempThread= new Thread(millThreadList.get(millCount));
             millThread.add(tempThread);
-            millThread.get(millCount).start();
+            millThreadList.get(millCount).collectThread(tempThread);
+            tempThread.start();
+           
             
         }
         try {
@@ -38,7 +40,7 @@ public class ClientTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        for(millCount=0; millCount<numberOfMills; millCount++){
+   /*     for(millCount=0; millCount<numberOfMills; millCount++){
             pulseCount=0;
             System.out.println("\nMill\t"+(millCount+1));
             System.out.println("Total quantity produced: ");
@@ -52,8 +54,9 @@ public class ClientTest {
             System.out.println(millThreadList.get(millCount).mill.pulses[pulseCount++].getConsumptionQty()+" kgs");
             System.out.print("Corn    : \t");
             System.out.println(millThreadList.get(millCount).mill.pulses[pulseCount++].getConsumptionQty()+" kgs");
-
+	
         }
+      */
         
     }
 }

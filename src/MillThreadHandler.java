@@ -7,11 +7,14 @@ public class MillThreadHandler implements Runnable {
     public Mill mill=new Mill();
     private int millNumber;
     private Connect connector;
-    
+    private Thread thread;
     public MillThreadHandler(int numberOfDays,int millNumber,Connect connector){
         this.numberOfDays=numberOfDays;
         this.millNumber=millNumber;
         this.connector=connector;
+    }
+    public void collectThread(Thread thread){
+    	this.thread=thread;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class MillThreadHandler implements Runnable {
         */
         //for normal execution, will need this to test out for database first as it will take less time.
         for(dayCount=0; ; ){
-        	  mill.generate(millNumber,connector);
+        	  mill.generate(millNumber,connector,thread);
         }
         
     }
