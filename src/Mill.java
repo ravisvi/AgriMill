@@ -3,12 +3,10 @@ import java.sql.Statement;
 
 
 public class Mill{
-    //Contains 5 pulses for rice, wheat corn millet and rawa
+    //Contains 5 pulses for rice, wheat corn millet and ragi
     public Pulse[] pulses = new Pulse[AmConstants.numberOfPulses];
     String[] name = {"Rice", "Wheat", "Rawa", "Millet", "Corn"};
-	private int timeTaken;
-
-    public Mill(){
+	public Mill(){
         for(int pulseCount = 0; pulseCount < AmConstants.numberOfPulses; pulseCount++){
         pulses[pulseCount] = new Pulse(this.name[pulseCount]);
         }
@@ -27,41 +25,37 @@ public class Mill{
             //Adding minimum consumption first.
            
             for(int randomQty=0;randomQty<5;randomQty++){
-            	int getQuantity=AmUtils.random.nextInt(10)+1;
+            	int getQuantity=AmUtils.random.nextInt(10)+1; //in order to obtain non-zero values
             	tempConsumption[randomQty]=getQuantity;
             	numberOfWorkingHours-=(int)((getQuantity/AmConstants.pulseProductionTime[randomQty]));
             	
             }
-            int randomQuantity = AmUtils.random.nextInt(40);
+            int randomQuantity = AmUtils.generateByProbablity(pulseCount);
             this.pulses[pulseCount].addConsumptionBy(randomQuantity);
             
             //Add a random consumption quantity to that pulse.
 
-            tempConsumption[pulseCount]+=randomQuantity;
+           tempConsumption[pulseCount] += randomQuantity;
             if(pulseCount==0){
-                timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/6);
-                numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread); //rice= 6/hour
+                numberOfWorkingHours-=(int)((this.pulses[pulseCount].getConsumptionQty())/100);  //rice= 100/hour                
             }
 
             else if(pulseCount==1){
-            	timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/10);
-                numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread);//wheat= 10/hour
+                numberOfWorkingHours-=(int)((this.pulses[pulseCount].getConsumptionQty())/100);  //wheat= 100/hour
             }
 
             else if(pulseCount==2){
-            	timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/30);
-                numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread);//rawa= 30/hour
+                numberOfWorkingHours-=(int)((this.pulses[pulseCount].getConsumptionQty())/200);  //rawa = 200/hour
             }
 
             else if(pulseCount==3){
-            	timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/4);
-                numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread);  //millet= 4/hour
+                numberOfWorkingHours-=(int)((this.pulses[pulseCount].getConsumptionQty())/70);  //millet= 70/hour
             }
 
             else{
-            	timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/5);
-                numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread);   //corn= 5/hour
+                numberOfWorkingHours-=(int)((this.pulses[pulseCount].getConsumptionQty())/200);  //ragi = 200/hour
             }
+
 
         }
         try {
@@ -78,7 +72,7 @@ public class Mill{
     public int reduceTime(int timeTaken,int numberOfWorkingHours, Thread thread){
     	numberOfWorkingHours-=timeTaken; 
         try {
-			thread.sleep(timeTaken*AmConstants.hoursToMillisecs);
+			Thread.sleep(timeTaken*AmConstants.hoursToMillisecs);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

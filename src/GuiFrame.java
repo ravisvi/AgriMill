@@ -92,7 +92,7 @@ public class GuiFrame extends javax.swing.JFrame {
 
 	private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {                                      
 			// TODO add your handling code here:
-		for(int threadCount=0; threadCount<client.numberOfMills; threadCount++){
+		for(int threadCount = 0; threadCount < client.numberOfMills; threadCount++){
 				client.millThread.get(threadCount).stop();
 				try {
 					client.connector.conn.close();

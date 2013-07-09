@@ -17,8 +17,8 @@ public class ClientTest {
         Scanner in=new Scanner(System.in);
         System.out.print("Enter the number of Mills which would run\t");
         numberOfMills=in.nextInt();
-        System.out.print("Enter the number of days\t");
-        numberOfDays=in.nextInt();
+//        System.out.print("Enter the number of days\t");
+//        numberOfDays=in.nextInt();
         
         connector.connect();
         
