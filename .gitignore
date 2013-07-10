@@ -6,5 +6,11 @@ out/
  .settings/
  bin/
  lib/
+ *.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
  
  
