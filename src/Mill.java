@@ -20,18 +20,22 @@ public class Mill{
         int numberOfWorkingHours=AmConstants.millWorkingHours;
         int pulseCount;
         int tempConsumption[]=new int[AmConstants.numberOfPulses];
+        
+      //Adding minimum consumption first.
+        for(int randomQty=0;randomQty<5;randomQty++){
+        	int getQuantity=AmUtils.random.nextInt(10)+1;
+        	tempConsumption[randomQty]=getQuantity;
+        	numberOfWorkingHours-=(int)((getQuantity/AmConstants.pulseProductionTime[randomQty]));
+         }
+      	
+    	int randomElectricDelay=AmUtils.random.nextInt(2);
+        //Add a random Electric Delay because of power cut
+    	numberOfWorkingHours=reduceTime(randomElectricDelay, numberOfWorkingHours, thread);
         while(numberOfWorkingHours>0){
             pulseCount=AmUtils.random.nextInt(AmConstants.numberOfPulses);
             //Get a random pulse.
             
-            //Adding minimum consumption first.
-           
-            for(int randomQty=0;randomQty<5;randomQty++){
-            	int getQuantity=AmUtils.random.nextInt(10)+1;
-            	tempConsumption[randomQty]=getQuantity;
-            	numberOfWorkingHours-=(int)((getQuantity/AmConstants.pulseProductionTime[randomQty]));
-            	
-            }
+          
             int randomQuantity = AmUtils.generateByProbablity(pulseCount);
             this.pulses[pulseCount].addConsumptionBy(randomQuantity);
             
