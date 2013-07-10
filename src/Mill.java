@@ -6,7 +6,9 @@ public class Mill{
     //Contains 5 pulses for rice, wheat corn millet and ragi
     public Pulse[] pulses = new Pulse[AmConstants.numberOfPulses];
     String[] name = {"Rice", "Wheat", "Rawa", "Millet", "Corn"};
-	public Mill(){
+	private int timeTaken;
+
+    public Mill(){
         for(int pulseCount = 0; pulseCount < AmConstants.numberOfPulses; pulseCount++){
         pulses[pulseCount] = new Pulse(this.name[pulseCount]);
         }
@@ -25,7 +27,7 @@ public class Mill{
             //Adding minimum consumption first.
            
             for(int randomQty=0;randomQty<5;randomQty++){
-            	int getQuantity=AmUtils.random.nextInt(10)+1; //in order to obtain non-zero values
+            	int getQuantity=AmUtils.random.nextInt(10)+1;
             	tempConsumption[randomQty]=getQuantity;
             	numberOfWorkingHours-=(int)((getQuantity/AmConstants.pulseProductionTime[randomQty]));
             	
@@ -35,27 +37,31 @@ public class Mill{
             
             //Add a random consumption quantity to that pulse.
 
-           tempConsumption[pulseCount] += randomQuantity;
+            tempConsumption[pulseCount]+=randomQuantity;
             if(pulseCount==0){
-                numberOfWorkingHours-=(int)((this.pulses[pulseCount].getConsumptionQty())/100);  //rice= 100/hour                
+                timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/AmConstants.pulseProductionTime[0]);
+                numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread); //rice = 100/hour
             }
 
             else if(pulseCount==1){
-                numberOfWorkingHours-=(int)((this.pulses[pulseCount].getConsumptionQty())/100);  //wheat= 100/hour
+            	timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/AmConstants.pulseProductionTime[1]);
+                numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread);//wheat = 100/hour
             }
 
             else if(pulseCount==2){
-                numberOfWorkingHours-=(int)((this.pulses[pulseCount].getConsumptionQty())/200);  //rawa = 200/hour
+            	timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/AmConstants.pulseProductionTime[2]);
+                numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread);//rawa = 200/hour
             }
 
             else if(pulseCount==3){
-                numberOfWorkingHours-=(int)((this.pulses[pulseCount].getConsumptionQty())/70);  //millet= 70/hour
+            	timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/AmConstants.pulseProductionTime[3]);
+                numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread);  //millet = 70/hour
             }
 
             else{
-                numberOfWorkingHours-=(int)((this.pulses[pulseCount].getConsumptionQty())/200);  //ragi = 200/hour
+            	timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/AmConstants.pulseProductionTime[4]);
+                numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread);   //ragi = 200/hour
             }
-
 
         }
         try {
@@ -72,7 +78,7 @@ public class Mill{
     public int reduceTime(int timeTaken,int numberOfWorkingHours, Thread thread){
     	numberOfWorkingHours-=timeTaken; 
         try {
-			Thread.sleep(timeTaken*AmConstants.hoursToMillisecs);
+			thread.sleep(timeTaken*AmConstants.hoursToMillisecs);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
