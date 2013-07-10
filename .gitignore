@@ -5,4 +5,6 @@ out/
  .project
  .settings/
  bin/
+ lib/
+ 
  
