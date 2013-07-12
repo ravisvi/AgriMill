@@ -14,7 +14,7 @@ public class Mill{
         }
     }
 
-    public void generate(int millNumber,Connect connector, Thread thread)
+    public void generate(int areaId, int millNumber,Connect connector, Thread thread)
     {
         //put db insertion here.
         int numberOfWorkingHours=AmConstants.millWorkingHours;
@@ -70,7 +70,7 @@ public class Mill{
         }
         try {
 			Statement statement=connector.conn.createStatement();
-			String insertion="INSERT INTO mill"+millNumber+" values("+tempConsumption[0]+","+tempConsumption[1]+","+tempConsumption[2]+","+tempConsumption[3]+","+tempConsumption[4]+");";
+			String insertion="INSERT INTO area_"+areaId+"_mill_"+millNumber+" values("+tempConsumption[0]+","+tempConsumption[1]+","+tempConsumption[2]+","+tempConsumption[3]+","+tempConsumption[4]+");";
 			statement.executeUpdate(insertion);
 			statement.close();
 		} catch (SQLException e) {
