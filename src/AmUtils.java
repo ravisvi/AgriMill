@@ -1,14 +1,7 @@
 import java.util.Random;
 public class AmUtils {
 	static Random random = new Random();
-	static int generateByProbablity(int pulseNumber) {
-		
-		int[] distribution = {5, 8, 10}; 
-		/* probability distribution array
-		 * 50% for 1-15 kg
-		 * 30% for 16-40 kg
-		 * 20% for 40+ kg
-		 */
+	static int generateByProbablity(int pulseNumber, int[] distribution) {
 		int randomKey = 1 + random.nextInt(9);
 		if (randomKey <= distribution[0]) {
 			return (1 + random.nextInt(15));

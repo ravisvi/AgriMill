@@ -4,18 +4,19 @@ import java.sql.Statement;
 
 public class MillThreadHandler implements Runnable {
     private int numberOfDays;
-    private int areaId;
+    private Area area;
     public Mill mill=new Mill();
     private int millNumber;
     private Connect connector;
     private Thread thread;
-    public MillThreadHandler(int areaId, int numberOfDays,int millNumber,Connect connector){
+    public MillThreadHandler(Area area, int numberOfDays,int millNumber,Connect connector){
         this.numberOfDays=numberOfDays;
         this.millNumber=millNumber;
         this.connector=connector;
-        this.areaId = areaId;
+        this.area = area;
     }
-    public void collectThread(Thread thread){
+   
+	public void collectThread(Thread thread){
     	this.thread=thread;
     }
 
@@ -24,7 +25,7 @@ public class MillThreadHandler implements Runnable {
     	Statement stmt;
 		try {
 			stmt = connector.conn.createStatement();
-			String tablename="CREATE TABLE area_"+areaId+"_mill_"+millNumber +" (Rice integer,Wheat int , Rawa int, Millet int, Corn int)";
+			String tablename="CREATE TABLE area_"+area.areaId+"_mill_"+millNumber +" (Rice integer,Wheat int , Rawa int, Millet int, Corn int)";
 			stmt.executeUpdate(tablename);
 			stmt.close();
 		}
@@ -33,20 +34,8 @@ public class MillThreadHandler implements Runnable {
 			e.printStackTrace();
 		}
        int dayCount;
-       // long daysInMs;
-       /*long final_time;
-       System.out.println(System.currentTimeMillis());
-       // daysInMs=(this.numberOfDays*(AmConstants.daysToMillisecs))+System.currentTimeMillis();
-       final_time=this.numberOfDays*1000+System.currentTimeMillis();
-
-        while(System.currentTimeMillis()<=final_time){
-            mill.generate(millNumber,connector);
-        }
-        System.out.println(System.currentTimeMillis());
-        */
-        //for normal execution, will need this to test out for database first as it will take less time.
         for(dayCount=0; ; ){
-        	  mill.generate(areaId, millNumber,connector,thread);
+        	  mill.generate(area, millNumber,connector,thread);
         }
         
     }

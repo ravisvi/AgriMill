@@ -14,7 +14,7 @@ public class Mill{
         }
     }
 
-    public void generate(int areaId, int millNumber,Connect connector, Thread thread)
+    public void generate(Area area, int millNumber,Connect connector, Thread thread)
     {
         //put db insertion here.
         int numberOfWorkingHours=AmConstants.millWorkingHours;
@@ -35,8 +35,10 @@ public class Mill{
             pulseCount=AmUtils.random.nextInt(AmConstants.numberOfPulses);
             //Get a random pulse.
             
-          
-            int randomQuantity = AmUtils.generateByProbablity(pulseCount);
+            
+            
+            int randomQuantity = AmUtils.generateByProbablity(pulseCount,rangeDistribution(area.population) );
+            
             this.pulses[pulseCount].addConsumptionBy(randomQuantity);
             
             //Add a random consumption quantity to that pulse.
@@ -70,7 +72,7 @@ public class Mill{
         }
         try {
 			Statement statement=connector.conn.createStatement();
-			String insertion="INSERT INTO area_"+areaId+"_mill_"+millNumber+" values("+tempConsumption[0]+","+tempConsumption[1]+","+tempConsumption[2]+","+tempConsumption[3]+","+tempConsumption[4]+");";
+			String insertion="INSERT INTO area_"+area.areaId+"_mill_"+millNumber+" values("+tempConsumption[0]+","+tempConsumption[1]+","+tempConsumption[2]+","+tempConsumption[3]+","+tempConsumption[4]+");";
 			statement.executeUpdate(insertion);
 			statement.close();
 		} catch (SQLException e) {
@@ -78,6 +80,23 @@ public class Mill{
 			e.printStackTrace();
 		}
         
+    }
+    public int[] rangeDistribution(long population)
+    {
+    	int [] distribution;
+    	if(population<=AmConstants.areaRange1)
+    		distribution  = new int[]{7,9,10};
+    	else if(population>AmConstants.areaRange1 && population<=AmConstants.areaRange2)
+    		distribution  = new int[]{6,9,10};
+    	else if(population>AmConstants.areaRange2 && population<=AmConstants.areaRange3)
+    		distribution  = new int[]{5,9,10};
+    	else if(population>AmConstants.areaRange3 && population<=AmConstants.areaRange4)
+    		distribution  = new int[]{5,8,10};
+    	else if(population>AmConstants.areaRange4 && population<=AmConstants.areaRange5)
+    		distribution  = new int[]{7,9,10};
+    	else
+    		distribution  = new int[]{7,9,10};
+    	return distribution;
     }
     public int reduceTime(int timeTaken,int numberOfWorkingHours, Thread thread){
     	numberOfWorkingHours-=timeTaken; 
