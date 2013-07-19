@@ -1,12 +1,12 @@
 .idea/
 AgriMill.iml
 out/
- .classpath
- .project
- .settings/
- bin/
- lib/
- *.class
+.classpath
+.project
+.settings/
+bin/
+lib/
+*.class
 
 # Package Files #
 *.jar
