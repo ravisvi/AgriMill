@@ -12,27 +12,28 @@ public class Mill{
 	public Pulse[] pulses = new Pulse[AmConstants.numberOfPulses];
 	String[] name = {"Rice", "Wheat", "Rawa", "Millet", "Corn"};
 	private int timeTaken;
-
+    private int dayCount;
+    private MongoClient mongoClient;
+    DBObject dbObject;
 	public Mill(){
+        dayCount=1;
 		for(int pulseCount = 0; pulseCount < AmConstants.numberOfPulses; pulseCount++){
 			pulses[pulseCount] = new Pulse(this.name[pulseCount]);
 		}
 	}
 
-	public void generate(Area area, int millNumber, Thread thread)
+	public void generate(Area area, int millNumber, Thread thread, DB db)
 	{
 		//put db insertion here.
 		int numberOfWorkingHours=AmConstants.millWorkingHours;
 		int pulseCount;
+        String insertion;
 		int tempConsumption[]=new int[AmConstants.numberOfPulses];
+        DBCollection collection = db.getCollection("area_"+area.areaId+"_mill_"+millNumber);
+         insertion = "{'Day ':"+dayCount+"}";
 
-		//Adding minimum consumption first.
-		for(int randomQty=0;randomQty<5;randomQty++){
-			int getQuantity=AmUtils.random.nextInt(10)+1;
-			tempConsumption[randomQty]=getQuantity;
-			numberOfWorkingHours-=(int)((getQuantity/AmConstants.pulseProductionTime[randomQty]));
-		}
-
+        dbObject = (DBObject)JSON.parse(insertion);
+        collection.insert(dbObject);
 		int randomElectricDelay=AmUtils.random.nextInt(2);
 		//Add a random Electric Delay because of power cut
 		numberOfWorkingHours=reduceTime(randomElectricDelay, numberOfWorkingHours, thread);
@@ -52,44 +53,48 @@ public class Mill{
 			if(pulseCount==0){
 				timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/AmConstants.pulseProductionTime[0]);
 				numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread); //rice = 100/hour
+                insertion="{'rice':"+tempConsumption[pulseCount]+"}";
+                dbObject = (DBObject)JSON.parse(insertion);
+                collection.insert(dbObject);
 			}
 
 			else if(pulseCount==1){
 				timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/AmConstants.pulseProductionTime[1]);
 				numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread);//wheat = 100/hour
+                insertion="{'wheat':"+tempConsumption[pulseCount]+"}";
+                dbObject = (DBObject)JSON.parse(insertion);
+                collection.insert(dbObject);
 			}
 
 			else if(pulseCount==2){
 				timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/AmConstants.pulseProductionTime[2]);
 				numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread);//rawa = 200/hour
+                insertion="{'rawa':"+tempConsumption[pulseCount]+"}";
+                dbObject = (DBObject)JSON.parse(insertion);
+                collection.insert(dbObject);
 			}
 
 			else if(pulseCount==3){
 				timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/AmConstants.pulseProductionTime[3]);
 				numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread);  //millet = 70/hour
+                insertion="{'millet':"+tempConsumption[pulseCount]+"}";
+                dbObject = (DBObject)JSON.parse(insertion);
+                collection.insert(dbObject);
 			}
 
 			else{
 				timeTaken = (int)((this.pulses[pulseCount].getConsumptionQty())/AmConstants.pulseProductionTime[4]);
 				numberOfWorkingHours=reduceTime(timeTaken, numberOfWorkingHours, thread);   //ragi = 200/hour
+                insertion="{'ragi':"+tempConsumption[pulseCount]+"}";
+                dbObject = (DBObject)JSON.parse(insertion);
+                collection.insert(dbObject);
 			}
 
+
 		}
-		MongoClient mongoClient;
-		try {
-			mongoClient = new MongoClient();
-			DB db = mongoClient.getDB("mill");
-			DBCollection collection = db.getCollection("area_"+area.areaId+"_mill_"+millNumber);
-			String insertion="{'rice':"+tempConsumption[0]+", 'wheat':"+tempConsumption[1]+", 'rawa':"+tempConsumption[2]+", 'millet':"+tempConsumption[3]+", 'ragi':"+tempConsumption[4]+"}";
-			DBObject dbObject = (DBObject)JSON.parse(insertion);			 
-			collection.insert(dbObject);
-		} 
-		catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}    
-	}
-	
+        dayCount++;
+    }
+
 	public int[] rangeDistribution(long population)
 	{
 		int [] distribution;

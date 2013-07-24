@@ -4,10 +4,6 @@ import java.awt.Color;
  * and open the template in the editor.
  */
 
-/**
- *
- * @author Sam
- */
 @SuppressWarnings("serial")
 public class GuiFrame extends javax.swing.JFrame {
 

@@ -19,8 +19,6 @@ public class Area {
 		numberOfMills=in.nextInt();
 		//        System.out.print("Enter the number of days\t");
 		//        numberOfDays=in.nextInt();
-		
-
 		for(int millCount=0; millCount<numberOfMills; millCount++)
 		{
 			millThreadList.add(new MillThreadHandler(this, numberOfDays,millCount+1));
@@ -28,14 +26,6 @@ public class Area {
 			millThread.add(tempThread);
 			millThreadList.get(millCount).collectThread(tempThread);
 			tempThread.start();
-		}
-		try {
-			Thread.sleep(250);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+        }
 	}
-
 }
