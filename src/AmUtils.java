@@ -1,6 +1,7 @@
 import java.util.Random;
 public class AmUtils {
 	static Random random = new Random();
+<<<<<<< HEAD
 	static int generatePulseByProbablity(int pulseNumber) {
 
 		int[] distribution = {5, 8, 10}; 
@@ -9,6 +10,9 @@ public class AmUtils {
 		 * 30% for 16-40 kg
 		 * 20% for 40+ kg
 		 */
+=======
+	static int generateByProbablity(int pulseNumber, int[] distribution) {
+>>>>>>> ConstraintsBranch
 		int randomKey = 1 + random.nextInt(9);
 		if (randomKey <= distribution[0]) {
 			return (1 + random.nextInt(15));

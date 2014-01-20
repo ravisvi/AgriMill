@@ -1,52 +1,34 @@
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.mongodb.DB;
+import com.mongodb.MongoClient;
 
+import java.net.UnknownHostException;
 
 public class MillThreadHandler implements Runnable {
-    private int numberOfDays;
-    public Mill mill=new Mill();
-    private int millNumber;
-    private Connect connector;
-    private Thread thread;
-    public MillThreadHandler(int numberOfDays,int millNumber,Connect connector){
-        this.numberOfDays=numberOfDays;
-        this.millNumber=millNumber;
-        this.connector=connector;
-    }
-    public void collectThread(Thread thread){
-    	this.thread=thread;
-    }
+	private Area area;
+	public Mill mill=new Mill();
+	private int millNumber;
+	private Thread thread;
+    private MongoClient mongoClient ;
+    private DB db ;
+	public MillThreadHandler(Area area, int numberOfDays,int millNumber){
+		this.millNumber=millNumber;
+		this.area = area;
+	}
 
-    @Override
-    public void run(){
-    	Statement stmt;
-		try {
-			stmt = connector.conn.createStatement();
-			String tablename="CREATE TABLE mill"+ millNumber +" (Rice integer,Wheat int , Rawa int, Millet int, Corn int)";
-			stmt.executeUpdate(tablename);
-			stmt.close();
+	public void collectThread(Thread thread){
+		this.thread=thread;
+	}
+
+	@Override
+	public void run(){
+		while(true){
+            try {
+                mongoClient=new MongoClient();
+                db=mongoClient.getDB("mill");
+            } catch (UnknownHostException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+            mill.generate(area, millNumber,thread,db);
 		}
-		catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-       int dayCount;
-       // long daysInMs;
-       /*long final_time;
-       System.out.println(System.currentTimeMillis());
-       // daysInMs=(this.numberOfDays*(AmConstants.daysToMillisecs))+System.currentTimeMillis();
-       final_time=this.numberOfDays*1000+System.currentTimeMillis();
-
-        while(System.currentTimeMillis()<=final_time){
-            mill.generate(millNumber,connector);
-        }
-        System.out.println(System.currentTimeMillis());
-        */
-        //for normal execution, will need this to test out for database first as it will take less time.
-        for(dayCount=0; ; ){
-        	  mill.generate(millNumber,connector,thread);
-        }
-        
-    }
-
+	}
 }
