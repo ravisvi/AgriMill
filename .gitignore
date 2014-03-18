@@ -7,10 +7,10 @@ out/
 bin/
 lib/
 *.class
-
+src/META-INF
 # Package Files #
 *.jar
 *.war
 *.ear
- 
+
  
