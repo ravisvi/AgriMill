@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class Area {
 	int areaId;
+    static int insertCount;
 	long population;
 	int electricityCutHours;
 	int numberOfMills;

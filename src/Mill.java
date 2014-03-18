@@ -1,5 +1,4 @@
 import java.net.UnknownHostException;
-//rgvr007
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -11,9 +10,10 @@ public class Mill{
 	//Contains 5 pulses for rice, wheat corn millet and ragi
 	public Pulse[] pulses = new Pulse[AmConstants.numberOfPulses];
 	String[] name = {"Rice", "Wheat", "Rawa", "Millet", "Corn"};
+
 	private int timeTaken;
     private int dayCount;
-    private MongoClient mongoClient;
+    //private MongoClient mongoClient;
     DBObject dbObject;
 	public Mill(){
         dayCount=1;
@@ -22,8 +22,11 @@ public class Mill{
 		}
 	}
 
-	public void generate(Area area, int millNumber, Thread thread, DB db)
+	public void generate(Area area, int millNumber, Thread thread, DB db, MongoClient mongoClient)
 	{
+
+        //System.out.println(Area.insertCount);
+
 		//put db insertion here.
 		int numberOfWorkingHours=AmConstants.millWorkingHours;
 		int pulseCount;
@@ -56,6 +59,7 @@ public class Mill{
                 insertion="{'rice':"+tempConsumption[pulseCount]+"}";
                 dbObject = (DBObject)JSON.parse(insertion);
                 collection.insert(dbObject);
+                Area.insertCount++;
 			}
 
 			else if(pulseCount==1){
@@ -64,6 +68,7 @@ public class Mill{
                 insertion="{'wheat':"+tempConsumption[pulseCount]+"}";
                 dbObject = (DBObject)JSON.parse(insertion);
                 collection.insert(dbObject);
+                Area.insertCount++;
 			}
 
 			else if(pulseCount==2){
@@ -72,6 +77,7 @@ public class Mill{
                 insertion="{'rawa':"+tempConsumption[pulseCount]+"}";
                 dbObject = (DBObject)JSON.parse(insertion);
                 collection.insert(dbObject);
+                Area.insertCount++;
 			}
 
 			else if(pulseCount==3){
@@ -80,6 +86,7 @@ public class Mill{
                 insertion="{'millet':"+tempConsumption[pulseCount]+"}";
                 dbObject = (DBObject)JSON.parse(insertion);
                 collection.insert(dbObject);
+                Area.insertCount++;
 			}
 
 			else{
@@ -88,11 +95,37 @@ public class Mill{
                 insertion="{'ragi':"+tempConsumption[pulseCount]+"}";
                 dbObject = (DBObject)JSON.parse(insertion);
                 collection.insert(dbObject);
+                Area.insertCount++;
 			}
+           //  System.out.println(db.command("ServerStatus"));
+          //  System.out.println();
+            if(db.eval("db.serverStatus().connections.available").toString().equals(800))
+            {
+                System.out.println("hello world");
+                for(Thread th : area.millThread)
+                {
+                    try {
+                        th.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
+                }
+                mongoClient.close();
+                try {
 
+                    mongoClient = new MongoClient();
+                    Area.insertCount = 0;
+
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+
+
+            }
 
 		}
         dayCount++;
+
     }
 
 	public int[] rangeDistribution(long population)
